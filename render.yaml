@@ -1,0 +1,65 @@
+# Render Blueprint — deploys the Django backend + the Vite frontend.
+# In Render: New + → Blueprint → pick this repo. Then fill the secret env vars
+# marked `sync: false` in the dashboard (they're never committed to git).
+services:
+  # ---- Django API ----
+  - type: web
+    name: ticketboy-backend
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --no-input && python manage.py migrate"
+    startCommand: "gunicorn config.wsgi:application"
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.13.3"
+      - key: DJANGO_DEBUG
+        value: "False"
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL          # Neon connection string
+        sync: false
+      - key: USE_SPACES
+        value: "True"
+      - key: DO_SPACES_BUCKET
+        value: tikiti
+      - key: DO_SPACES_REGION
+        value: sfo3
+      - key: DO_SPACES_ENDPOINT
+        value: https://sfo3.digitaloceanspaces.com
+      - key: DO_SPACES_KEY
+        sync: false
+      - key: DO_SPACES_SECRET
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: FRONTEND_ORIGINS
+        value: https://ticketboy.co.zw,https://ticketboy-v1.onrender.com
+      # Paynow — leave blank to keep the simulated flow until you go live
+      - key: PAYNOW_INTEGRATION_ID
+        sync: false
+      - key: PAYNOW_INTEGRATION_KEY
+        sync: false
+      - key: PAYNOW_RESULT_URL
+        value: https://ticketboy-backend.onrender.com/api/payments/result/
+      - key: PAYNOW_RETURN_URL
+        value: https://ticketboy.co.zw/tickets
+
+  # ---- React frontend (static) ----
+  - type: web
+    name: ticketboy-v1
+    runtime: static
+    rootDir: frontend
+    buildCommand: "npm install && npm run build"
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://ticketboy-backend.onrender.com/api
+      - key: VITE_GOOGLE_CLIENT_ID
+        sync: false
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
