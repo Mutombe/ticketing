@@ -36,7 +36,7 @@ services:
       - key: GOOGLE_CLIENT_SECRET
         sync: false
       - key: FRONTEND_ORIGINS
-        value: https://ticketboy.co.zw,https://ticketboy-v1.onrender.com
+        value: https://ticketing-ske3.onrender.com,https://ticketboy.co.zw
       # Paynow — leave blank to keep the simulated flow until you go live
       - key: PAYNOW_INTEGRATION_ID
         sync: false
