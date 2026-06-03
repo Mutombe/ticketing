@@ -402,7 +402,7 @@ button { font-family: inherit; }
 .rank.r1 { color: var(--green-600); } .rank.r2 { color: #93989A; } .rank.r3 { color: #B07A3C; }
 
 /* ---- Misc ---- */
-.section { padding: 32px 0; }
+.section { padding-top: 32px; padding-bottom: 32px; }  /* vertical only — must not wipe .container's side padding */
 .divider { height: 1px; background: var(--line); margin: 4px 0; }
 .hair { height: 1px; background: linear-gradient(90deg, transparent, var(--line-2), transparent); }
 .spinner { width: 30px; height: 30px; border: 3px solid var(--line); border-top-color: var(--green-600); border-radius: 999px; animation: spin .7s linear infinite; margin: 48px auto; }
@@ -585,7 +585,7 @@ button { font-family: inherit; }
 }
 @media (max-width: 600px) {
   .container { padding: 0 16px; }       /* consistent mobile gutters */
-  .section { padding: 38px 0 28px; }    /* more breathing room from the nav */
+  .section { padding-top: 38px; padding-bottom: 28px; }   /* vertical only */
   main { padding-top: 4px; }
   .pay { grid-template-columns: 1fr 1fr; }
   .grid-2 { grid-template-columns: 1fr; }
